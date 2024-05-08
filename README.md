@@ -12,6 +12,6 @@ This repository contains logic models created using the **Database Markup Langua
 3. Visit [dbdiagram.io](https://dbdiagram.io/) and upload your `.dbml` file to visualize the database structure.
 
 
-PS: Scripts .sql in this repository are designed to be compatible with Microsoft SQL Server.
+The `.sql` scripts in this repository are designed to be compatible with Microsoft SQL Server. You can generate scripts from `.dbml` for other DBMS (Database Management Systems) using [dbdiagram.io](https://dbdiagram.io/)
 
 Feel free to contribute or suggest improvements to the models!
