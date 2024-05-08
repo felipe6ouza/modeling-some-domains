@@ -11,4 +11,7 @@ This repository contains logic models created using the **Database Markup Langua
 2. Make any necessary modifications to the DBML files as per your domain modeling needs.
 3. Visit [dbdiagram.io](https://dbdiagram.io/) and upload your `.dbml` file to visualize the database structure.
 
+
+PS: Scripts .sql in this repository are designed to be compatible with Microsoft SQL Server.
+
 Feel free to contribute or suggest improvements to the models!
