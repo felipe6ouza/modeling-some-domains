@@ -1,2 +1,2 @@
 # modeling-some-domains
-A logic models created with dbml
+Logic models created with dbml
