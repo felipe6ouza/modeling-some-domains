@@ -1,3 +1,5 @@
+--- script compatible with Microsoft SQL Server.
+
 CREATE TABLE [budget] (
   [id] integer PRIMARY KEY,
   [user_id] integer NOT NULL,
