@@ -1,0 +1,76 @@
+
+Table budget {
+  id integer [primary key]
+  user_id integer [ref: - user.id, not null]
+  start_date datetime2 [default: `now()`]
+  end_date datetime2 [null]
+  name varchar (100) [not null]
+  budget_amount DECIMAL(10,2) [not null]
+  remaining_value DECIMAL(10,2) [not null]
+}
+
+Table user {
+  id integer [primary key]
+  first_name varchar(50) [not null]
+  last_name varchar (100) [not null]
+  birth_date date [not null]
+}
+
+Table account_type {
+  id integer [primary key]
+  description varchar (100) [not null]
+}
+
+Table account {
+  id integer [primary key]
+  user_id integer [ref: > user.id, not null]
+  account_type_id integer [ref: > account_type.id, not null]
+  balance DECIMAL(10,2) [not null]
+  account_name  varchar(100) [not null]
+  currency_code int [not null]
+}
+
+Table transaction {
+  id integer [primary key]
+  account_id integer [ref: > account.id, not null]
+  transaction_type_id integer [ref: - transaction_type.id, not null]
+  start_date datetime2 [default: `now()`]
+  description varchar(300) [not null]
+}
+
+Table transaction_type {
+  id integer [primary key]
+  description varchar(100) [not null]
+}
+
+Table expense {
+  transaction_id integer [primary key, ref: - transaction.id ]
+  transaction_type_id integer [ref: - transaction_type.id, not null ]
+  operation_value DECIMAL(10,2) [not null]
+  category_id integer [ref: - category.id, null] 
+}
+
+Table income {
+  transaction_id integer [primary key, ref: - transaction.id, not null ]
+  transaction_type_id integer [ref: - transaction_type.id, not null ]
+  operation_value DECIMAL(10,2) [not null]
+  category_id integer [ref: - category.id, null]
+}
+
+Table transfer {
+  transaction_id integer [primary key, ref: - transaction.id]
+  source_account_id integer [ref: > account.id, not null]
+  destination_account_id integer [ref: > account.id, not null]
+  transferred_amount DECIMAL(10,2) [not null]
+  transfer_date datetime2 [default: `now()`]
+  category_id integer [ref: - category.id, not null ]
+  transaction_type_id integer [ref: - transaction_type.id, not null]
+}
+
+Table category {
+  id integer [primary key]
+  name varchar (100) [not null]
+  parent_category_id  integer [ref: - category.id, null]
+  transaction_type_id integer [ref: > transaction_type.id, not null]
+  created_at datetime2 [default: `now()`]
+}
