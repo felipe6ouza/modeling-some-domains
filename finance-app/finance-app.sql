@@ -1,141 +1,147 @@
---- script compatible with Microsoft SQL Server.
-
-CREATE TABLE [budget] (
-  [id] integer PRIMARY KEY,
-  [user_id] integer NOT NULL,
-  [start_date] datetime2 DEFAULT (now()),
-  [end_date] datetime2,
-  [name] varchar(100) NOT NULL,
-  [budget_amount] DECIMAL(10,2) NOT NULL,
-  [remaining_value] DECIMAL(10,2) NOT NULL
+CREATE TABLE [Budget] (
+  [Id] integer PRIMARY KEY IDENTITY(1,1),
+  [UserId] integer NOT NULL,
+  [StartDate] datetime DEFAULT (GETDATE()),
+  [EndDate] datetime,
+  [Name] varchar(100) NOT NULL,
+  [BudgetAmount] DECIMAL(10,2) NOT NULL,
+  [RemainingValue] DECIMAL(10,2) NOT NULL
 )
 GO
 
-CREATE TABLE [user] (
-  [id] integer PRIMARY KEY,
-  [first_name] varchar(50) NOT NULL,
-  [last_name] varchar(100) NOT NULL,
-  [birth_date] date NOT NULL
+CREATE TABLE [User] (
+  [Id] integer PRIMARY KEY IDENTITY(1,1),
+  [FirstName] varchar(50) NOT NULL,
+  [LastName] varchar(100) NOT NULL,
+  [BirthDate] date NOT NULL
 )
 GO
 
-CREATE TABLE [account_type] (
-  [id] integer PRIMARY KEY,
-  [description] varchar(100) NOT NULL
+CREATE TABLE [AccountType] (
+  [Id] integer PRIMARY KEY IDENTITY(1,1),
+  [Description] varchar(100) NOT NULL
 )
 GO
 
-CREATE TABLE [account] (
-  [id] integer PRIMARY KEY,
-  [user_id] integer NOT NULL,
-  [account_type_id] integer NOT NULL,
-  [balance] DECIMAL(10,2) NOT NULL,
-  [account_name] varchar(100) NOT NULL,
-  [currency_code] int NOT NULL
+CREATE TABLE [Account] (
+  [Id] integer PRIMARY KEY IDENTITY(1,1),
+  [UserId] integer NOT NULL,
+  [AccountTypeId] integer NOT NULL,
+  [Balance] DECIMAL(10,2) NOT NULL,
+  [AccountName] varchar(100) NOT NULL,
+  [CurrencyCode] int NOT NULL
 )
 GO
 
-CREATE TABLE [transaction] (
-  [id] integer PRIMARY KEY,
-  [account_id] integer NOT NULL,
-  [transaction_type_id] integer NOT NULL,
-  [start_date] datetime2 DEFAULT (now()),
-  [description] varchar(300) NOT NULL
+CREATE TABLE [Transaction] (
+  [Id] integer PRIMARY KEY IDENTITY(1,1),
+  [AccountId] integer NOT NULL,
+  [TransactionTypeId] integer NOT NULL,
+  [StartDate] datetime DEFAULT (GETDATE()),
+  [Description] varchar(300) NOT NULL
 )
 GO
 
-CREATE TABLE [transaction_type] (
-  [id] integer PRIMARY KEY,
-  [description] varchar(100) NOT NULL
+CREATE TABLE [TransactionType] (
+  [Id] integer PRIMARY KEY IDENTITY(1,1),
+  [Description] varchar(100) NOT NULL
 )
 GO
 
-CREATE TABLE [expense] (
-  [transaction_id] integer PRIMARY KEY,
-  [transaction_type_id] integer NOT NULL,
-  [operation_value] DECIMAL(10,2) NOT NULL,
-  [category_id] integer
+CREATE TABLE [Expense] (
+  [TransactionId] integer PRIMARY KEY,
+  [TransactionTypeId] integer NOT NULL,
+  [OperationValue] DECIMAL(10,2) NOT NULL CHECK (OperationValue < 0),
+  [CategoryId] integer
 )
 GO
 
-CREATE TABLE [income] (
-  [transaction_id] integer PRIMARY KEY NOT NULL,
-  [transaction_type_id] integer NOT NULL,
-  [operation_value] DECIMAL(10,2) NOT NULL,
-  [category_id] integer
+CREATE TABLE [Income] (
+  [TransactionId] integer PRIMARY KEY,
+  [TransactionTypeId] integer NOT NULL,
+  [OperationValue] DECIMAL(10,2) NOT NULL,
+  [CategoryId] integer
 )
 GO
 
-CREATE TABLE [transfer] (
-  [transaction_id] integer PRIMARY KEY,
-  [source_account_id] integer NOT NULL,
-  [destination_account_id] integer NOT NULL,
-  [transferred_amount] DECIMAL(10,2) NOT NULL,
-  [transfer_date] datetime2 DEFAULT (now()),
-  [category_id] integer NOT NULL,
-  [transaction_type_id] integer NOT NULL
+CREATE TABLE [Transfer] (
+  [TransactionId] integer PRIMARY KEY,
+  [SourceAccountId] integer NOT NULL,
+  [DestinationAccountId] integer NOT NULL,
+  [TransferredAmount] DECIMAL(10,2) NOT NULL,
+  [TransferDate] datetime DEFAULT (GETDATE()),
+  [CategoryId] integer NOT NULL,
+  [TransactionTypeId] integer NOT NULL
 )
 GO
 
-CREATE TABLE [category] (
-  [id] integer PRIMARY KEY,
-  [name] varchar(100) NOT NULL,
-  [parent_category_id] integer,
-  [transaction_type_id] integer NOT NULL,
-  [created_at] datetime2 DEFAULT (now())
+CREATE TABLE [Category] (
+  [Id] integer PRIMARY KEY IDENTITY(1,1),
+  [Name] varchar(100) NOT NULL,
+  [ParentCategoryId] integer,
+  [TransactionTypeId] integer NOT NULL,
+  [CreatedAt] datetime DEFAULT (GETDATE())
 )
 GO
 
-ALTER TABLE [budget] ADD FOREIGN KEY ([user_id]) REFERENCES [user] ([id])
+ALTER TABLE [Budget] ADD FOREIGN KEY ([UserId]) REFERENCES [User] ([Id])
 GO
 
-ALTER TABLE [account] ADD FOREIGN KEY ([user_id]) REFERENCES [user] ([id])
+ALTER TABLE [Account] ADD FOREIGN KEY ([UserId]) REFERENCES [User] ([Id])
 GO
 
-ALTER TABLE [account] ADD FOREIGN KEY ([account_type_id]) REFERENCES [account_type] ([id])
+ALTER TABLE [Account] ADD FOREIGN KEY ([AccountTypeId]) REFERENCES [AccountType] ([Id])
 GO
 
-ALTER TABLE [transaction] ADD FOREIGN KEY ([account_id]) REFERENCES [account] ([id])
+ALTER TABLE [Transaction] ADD FOREIGN KEY ([AccountId]) REFERENCES [Account] ([Id])
 GO
 
-ALTER TABLE [transaction] ADD FOREIGN KEY ([transaction_type_id]) REFERENCES [transaction_type] ([id])
+ALTER TABLE [Transaction] ADD FOREIGN KEY ([TransactionTypeId]) REFERENCES [TransactionType] ([Id])
 GO
 
-ALTER TABLE [expense] ADD FOREIGN KEY ([transaction_id]) REFERENCES [transaction] ([id])
+ALTER TABLE [Expense] ADD FOREIGN KEY ([TransactionId]) REFERENCES [Transaction] ([Id])
 GO
 
-ALTER TABLE [expense] ADD FOREIGN KEY ([transaction_type_id]) REFERENCES [transaction_type] ([id])
+ALTER TABLE [Expense] ADD FOREIGN KEY ([TransactionTypeId]) REFERENCES [TransactionType] ([Id])
 GO
 
-ALTER TABLE [expense] ADD FOREIGN KEY ([category_id]) REFERENCES [category] ([id])
+ALTER TABLE [Expense] ADD FOREIGN KEY ([CategoryId]) REFERENCES [Category] ([Id])
 GO
 
-ALTER TABLE [income] ADD FOREIGN KEY ([transaction_id]) REFERENCES [transaction] ([id])
+ALTER TABLE [Income] ADD FOREIGN KEY ([TransactionId]) REFERENCES [Transaction] ([Id])
 GO
 
-ALTER TABLE [income] ADD FOREIGN KEY ([transaction_type_id]) REFERENCES [transaction_type] ([id])
+ALTER TABLE [Income] ADD FOREIGN KEY ([TransactionTypeId]) REFERENCES [TransactionType] ([Id])
 GO
 
-ALTER TABLE [income] ADD FOREIGN KEY ([category_id]) REFERENCES [category] ([id])
+ALTER TABLE [Income] ADD FOREIGN KEY ([CategoryId]) REFERENCES [Category] ([Id])
 GO
 
-ALTER TABLE [transfer] ADD FOREIGN KEY ([transaction_id]) REFERENCES [transaction] ([id])
+ALTER TABLE [Transfer] ADD FOREIGN KEY ([TransactionId]) REFERENCES [Transaction] ([Id])
 GO
 
-ALTER TABLE [transfer] ADD FOREIGN KEY ([source_account_id]) REFERENCES [account] ([id])
+ALTER TABLE [Transfer] ADD FOREIGN KEY ([SourceAccountId]) REFERENCES [Account] ([Id])
 GO
 
-ALTER TABLE [transfer] ADD FOREIGN KEY ([destination_account_id]) REFERENCES [account] ([id])
+ALTER TABLE [Transfer] ADD FOREIGN KEY ([DestinationAccountId]) REFERENCES [Account] ([Id])
 GO
 
-ALTER TABLE [transfer] ADD FOREIGN KEY ([category_id]) REFERENCES [category] ([id])
+ALTER TABLE [Transfer] ADD FOREIGN KEY ([CategoryId]) REFERENCES [Category] ([Id])
 GO
 
-ALTER TABLE [transfer] ADD FOREIGN KEY ([transaction_type_id]) REFERENCES [transaction_type] ([id])
+ALTER TABLE [Transfer] ADD FOREIGN KEY ([TransactionTypeId]) REFERENCES [TransactionType] ([Id])
 GO
 
-ALTER TABLE [category] ADD FOREIGN KEY ([parent_category_id]) REFERENCES [category] ([id])
+ALTER TABLE [Category] ADD FOREIGN KEY ([ParentCategoryId]) REFERENCES [Category] ([Id])
 GO
 
-ALTER TABLE [category] ADD FOREIGN KEY ([transaction_type_id]) REFERENCES [transaction_type] ([id])
+ALTER TABLE [Category] ADD FOREIGN KEY ([TransactionTypeId]) REFERENCES [TransactionType] ([Id])
+GO
+
+ALTER TABLE [Expense]
+ADD CONSTRAINT Check_Expense_OperationValue CHECK (OperationValue < 0);
+GO
+
+ALTER TABLE [Income]
+ADD CONSTRAINT Check_Income_OperationValue CHECK (OperationValue > 0);
 GO
