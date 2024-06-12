@@ -1,0 +1,79 @@
+Table user {
+  user_id integer [primary key, increment]
+  name varchar(100) [not null] 
+  last_name varchar(150) [not null] 
+  birthdate datetime [not null] 
+}
+
+Table project {
+  project_id integer [primary key, increment]
+  user_id integer [ref: - user.user_id, not null]
+  name varchar(150) [not null]
+  hexadecimal_color varchar(20) [not null]
+  favorite_flag boolean [default: false] 
+  active_flag boolean [default: true] 
+}
+
+Table task_type {
+ task_type_id integer [primary key, increment]
+ description varchar[30] [not null]
+}
+
+Table priority_type {
+ priority_id integer [primary key, increment]
+ description varchar[30] [not null]
+ hexadecimal_color varchar(20) [not null]
+}
+
+Table task {
+   task_id integer [primary key, increment]
+   created_time datetime [default: `now()`]
+   project_id integer  [ref: - project.project_id, not null]
+   task_type_id integer [ref: - task_type.task_type_id, not null]
+   priority_id integer [ref: - priority_type.priority_id, not null]
+   user_autor integer [ref: - user.user_id, not null]
+   parent_task integer  [ref: - task.task_id]
+   user_assignee integer [ref: - user.user_id]
+   name varchar(280) [not null]
+   description varchar(1000)
+   due_date datetime 
+}
+
+
+Table comment {
+  comment_id integer [primary key, increment]
+  task_id integer  [ref: - task.task_id, not null]
+  description varchar(1000) [not null]
+}
+
+
+Table task_label {
+  label_id integer [primary key, ref: - label.label_id, not null]
+  task_id integer [primary key, ref: - task.task_id, not null]
+}
+
+
+Table label {
+  label_id integer [primary key, increment]
+  name varchar(150) [not null]
+}
+
+Table project_involvement
+{
+  user_id integer [primary key, ref: - user.user_id]
+  project_id integer [primary key, ref: - project.project_id]
+}
+
+Table reminder {
+  reminder_id integer [primary key, increment]
+  task_id integer [ref: - task.task_id, not null]
+  user_id integer [primary key, ref: - user.user_id, not null]
+  reminder_date datetime [not null]
+}
+
+Table attachment {
+  attachment_id integer [primary key, increment]
+  comment_id integer [primary key, ref: - comment.comment_id, not null]
+  file_path varchar(500) [not null]
+  file_name varchar (150) [not null]
+}
