@@ -11,8 +11,8 @@ CREATE TABLE [Project] (
   [UserId] integer NOT NULL,
   [Name] varchar(150) NOT NULL,
   [HexadecimalColor] varchar(20) NOT NULL,
-  [FavoriteFlag] boolean DEFAULT (false),
-  [ActiveFlag] boolean DEFAULT (true)
+  [FavoriteFlag] BIT DEFAULT (0),
+  [ActiveFlag] BIT DEFAULT (1)
 )
 GO
 
