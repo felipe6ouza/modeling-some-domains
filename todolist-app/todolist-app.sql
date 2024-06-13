@@ -1,135 +1,135 @@
-CREATE TABLE [user] (
-  [user_id] integer PRIMARY KEY IDENTITY(1, 1),
-  [name] varchar(100) NOT NULL,
-  [last_name] varchar(150) NOT NULL,
-  [birthdate] datetime NOT NULL
+CREATE TABLE [User] (
+  [UserId] integer PRIMARY KEY IDENTITY(1, 1),
+  [Name] varchar(100) NOT NULL,
+  [LastName] varchar(150) NOT NULL,
+  [Birthdate] datetime NOT NULL
 )
 GO
 
-CREATE TABLE [project] (
-  [project_id] integer PRIMARY KEY IDENTITY(1, 1),
-  [user_id] integer NOT NULL,
-  [name] varchar(150) NOT NULL,
-  [hexadecimal_color] varchar(20) NOT NULL,
-  [favorite_flag] boolean DEFAULT (false),
-  [active_flag] boolean DEFAULT (true)
+CREATE TABLE [Project] (
+  [ProjectId] integer PRIMARY KEY IDENTITY(1, 1),
+  [UserId] integer NOT NULL,
+  [Name] varchar(150) NOT NULL,
+  [HexadecimalColor] varchar(20) NOT NULL,
+  [FavoriteFlag] boolean DEFAULT (false),
+  [ActiveFlag] boolean DEFAULT (true)
 )
 GO
 
-CREATE TABLE [task_type] (
-  [task_type_id] integer PRIMARY KEY IDENTITY(1, 1),
-  [description] varchar[30] NOT NULL
+CREATE TABLE [TaskType] (
+  [TaskTypeId] integer PRIMARY KEY IDENTITY(1, 1),
+  [Description] varchar(30) NOT NULL
 )
 GO
 
-CREATE TABLE [priority_type] (
-  [priority_id] integer PRIMARY KEY IDENTITY(1, 1),
-  [description] varchar[30] NOT NULL,
-  [hexadecimal_color] varchar(20) NOT NULL
+CREATE TABLE [PriorityType] (
+  [PriorityId] integer PRIMARY KEY IDENTITY(1, 1),
+  [Description] varchar(30) NOT NULL,
+  [HexadecimalColor] varchar(20) NOT NULL
 )
 GO
 
-CREATE TABLE [task] (
-  [task_id] integer PRIMARY KEY IDENTITY(1, 1),
-  [created_time] datetime DEFAULT (now()),
-  [project_id] integer NOT NULL,
-  [task_type_id] integer NOT NULL,
-  [priority_id] integer NOT NULL,
-  [user_autor] integer NOT NULL,
-  [parent_task] integer,
-  [user_assignee] integer,
-  [name] varchar(280) NOT NULL,
-  [description] varchar(1000),
-  [due_date] datetime
+CREATE TABLE [Task] (
+  [TaskId] integer PRIMARY KEY IDENTITY(1, 1),
+  [CreatedTime] datetime DEFAULT (GETDATE()),
+  [ProjectId] integer NOT NULL,
+  [TaskTypeId] integer NOT NULL,
+  [PriorityId] integer NOT NULL,
+  [UserAutor] integer NOT NULL,
+  [ParentTask] integer,
+  [UserAssignee] integer,
+  [Name] varchar(280) NOT NULL,
+  [Description] varchar(1000),
+  [DueDate] datetime
 )
 GO
 
-CREATE TABLE [comment] (
-  [comment_id] integer PRIMARY KEY IDENTITY(1, 1),
-  [task_id] integer NOT NULL,
-  [description] varchar(1000) NOT NULL
+CREATE TABLE [Comment] (
+  [CommentId] integer PRIMARY KEY IDENTITY(1, 1),
+  [TaskId] integer NOT NULL,
+  [Description] varchar(1000) NOT NULL
 )
 GO
 
-CREATE TABLE [task_label] (
-  [label_id] integer NOT NULL,
-  [task_id] integer NOT NULL,
-  PRIMARY KEY ([label_id], [task_id])
+CREATE TABLE [TaskLabel] (
+  [LabelId] integer NOT NULL,
+  [TaskId] integer NOT NULL,
+  PRIMARY KEY ([LabelId], [TaskId])
 )
 GO
 
-CREATE TABLE [label] (
-  [label_id] integer PRIMARY KEY IDENTITY(1, 1),
-  [name] varchar(150) NOT NULL
+CREATE TABLE [Label] (
+  [LabelId] integer PRIMARY KEY IDENTITY(1, 1),
+  [Name] varchar(150) NOT NULL
 )
 GO
 
-CREATE TABLE [project_involvement] (
-  [user_id] integer,
-  [project_id] integer,
-  PRIMARY KEY ([user_id], [project_id])
+CREATE TABLE [ProjectInvolvement] (
+  [UserId] integer,
+  [ProjectId] integer,
+  PRIMARY KEY ([UserId], [ProjectId])
 )
 GO
 
-CREATE TABLE [reminder] (
-  [reminder_id] integer IDENTITY(1, 1),
-  [task_id] integer NOT NULL,
-  [user_id] integer NOT NULL,
-  [reminder_date] datetime NOT NULL,
-  PRIMARY KEY ([reminder_id], [user_id])
+CREATE TABLE [Reminder] (
+  [ReminderId] integer IDENTITY(1, 1),
+  [TaskId] integer NOT NULL,
+  [UserId] integer NOT NULL,
+  [ReminderDate] datetime NOT NULL,
+  PRIMARY KEY ([ReminderId], [UserId])
 )
 GO
 
-CREATE TABLE [attachment] (
-  [attachment_id] integer IDENTITY(1, 1),
-  [comment_id] integer NOT NULL,
-  [file_path] varchar(500) NOT NULL,
-  [file_name] varchar(150) NOT NULL,
-  PRIMARY KEY ([attachment_id], [comment_id])
+CREATE TABLE [Attachment] (
+  [AttachmentId] integer IDENTITY(1, 1),
+  [CommentId] integer NOT NULL,
+  [FilePath] varchar(500) NOT NULL,
+  [FileName] varchar(150) NOT NULL,
+  PRIMARY KEY ([AttachmentId], [CommentId])
 )
 GO
 
-ALTER TABLE [project] ADD FOREIGN KEY ([user_id]) REFERENCES [user] ([user_id])
+ALTER TABLE [Project] ADD FOREIGN KEY ([UserId]) REFERENCES [User] ([UserId])
 GO
 
-ALTER TABLE [task] ADD FOREIGN KEY ([project_id]) REFERENCES [project] ([project_id])
+ALTER TABLE [Task] ADD FOREIGN KEY ([ProjectId]) REFERENCES [Project] ([ProjectId])
 GO
 
-ALTER TABLE [task] ADD FOREIGN KEY ([task_type_id]) REFERENCES [task_type] ([task_type_id])
+ALTER TABLE [Task] ADD FOREIGN KEY ([TaskTypeId]) REFERENCES [TaskType] ([TaskTypeId])
 GO
 
-ALTER TABLE [task] ADD FOREIGN KEY ([priority_id]) REFERENCES [priority_type] ([priority_id])
+ALTER TABLE [Task] ADD FOREIGN KEY ([PriorityId]) REFERENCES [PriorityType] ([PriorityId])
 GO
 
-ALTER TABLE [task] ADD FOREIGN KEY ([user_autor]) REFERENCES [user] ([user_id])
+ALTER TABLE [Task] ADD FOREIGN KEY ([UserAutor]) REFERENCES [User] ([UserId])
 GO
 
-ALTER TABLE [task] ADD FOREIGN KEY ([parent_task]) REFERENCES [task] ([task_id])
+ALTER TABLE [Task] ADD FOREIGN KEY ([ParentTask]) REFERENCES [Task] ([TaskId])
 GO
 
-ALTER TABLE [task] ADD FOREIGN KEY ([user_assignee]) REFERENCES [user] ([user_id])
+ALTER TABLE [Task] ADD FOREIGN KEY ([UserAssignee]) REFERENCES [User] ([UserId])
 GO
 
-ALTER TABLE [comment] ADD FOREIGN KEY ([task_id]) REFERENCES [task] ([task_id])
+ALTER TABLE [Comment] ADD FOREIGN KEY ([TaskId]) REFERENCES [Task] ([TaskId])
 GO
 
-ALTER TABLE [task_label] ADD FOREIGN KEY ([label_id]) REFERENCES [label] ([label_id])
+ALTER TABLE [TaskLabel] ADD FOREIGN KEY ([LabelId]) REFERENCES [Label] ([LabelId])
 GO
 
-ALTER TABLE [task_label] ADD FOREIGN KEY ([task_id]) REFERENCES [task] ([task_id])
+ALTER TABLE [TaskLabel] ADD FOREIGN KEY ([TaskId]) REFERENCES [Task] ([TaskId])
 GO
 
-ALTER TABLE [project_involvement] ADD FOREIGN KEY ([user_id]) REFERENCES [user] ([user_id])
+ALTER TABLE [ProjectInvolvement] ADD FOREIGN KEY ([UserId]) REFERENCES [User] ([UserId])
 GO
 
-ALTER TABLE [project_involvement] ADD FOREIGN KEY ([project_id]) REFERENCES [project] ([project_id])
+ALTER TABLE [ProjectInvolvement] ADD FOREIGN KEY ([ProjectId]) REFERENCES [Project] ([ProjectId])
 GO
 
-ALTER TABLE [reminder] ADD FOREIGN KEY ([task_id]) REFERENCES [task] ([task_id])
+ALTER TABLE [Reminder] ADD FOREIGN KEY ([TaskId]) REFERENCES [Task] ([TaskId])
 GO
 
-ALTER TABLE [reminder] ADD FOREIGN KEY ([user_id]) REFERENCES [user] ([user_id])
+ALTER TABLE [Reminder] ADD FOREIGN KEY ([UserId]) REFERENCES [User] ([UserId])
 GO
 
-ALTER TABLE [attachment] ADD FOREIGN KEY ([comment_id]) REFERENCES [comment] ([comment_id])
+ALTER TABLE [Attachment] ADD FOREIGN KEY ([CommentId]) REFERENCES [Comment] ([CommentId])
 GO
