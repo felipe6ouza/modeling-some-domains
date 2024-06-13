@@ -1,17 +1,5 @@
 -- Before executing this script, make sure the tables are empty
 
-BEGIN TRANSACTION
-
---Reset the IDENTITY for the tables.
-DBCC CHECKIDENT ('[User]', RESEED, 0);
-DBCC CHECKIDENT ('[AccountType]', RESEED, 0);
-DBCC CHECKIDENT ('[TransactionType]', RESEED, 0);
-DBCC CHECKIDENT ('[Category]', RESEED, 0);
-DBCC CHECKIDENT ('[Account]', RESEED, 0);
-DBCC CHECKIDENT ('[Budget]', RESEED, 0);
-DBCC CHECKIDENT ('[Transaction]', RESEED, 0);
-
-
 INSERT INTO [User] (FirstName, LastName, BirthDate) VALUES
 ('Alice', 'Silva', '1990-01-01'),
 ('Bob', 'Oliveira', '1985-05-15');
@@ -54,7 +42,3 @@ INSERT INTO [Income] (TransactionId, TransactionTypeId, OperationValue, Category
 
 INSERT INTO [Transfer] (TransactionId, SourceAccountId, DestinationAccountId, TransferredAmount, TransferDate, CategoryId, TransactionTypeId) VALUES
 (3, 2, 1, 1000.00, GETDATE(), 3, 3);
-
-
-COMMIT  -- OR ROLLBACK, You decide.
-
